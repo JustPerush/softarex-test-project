@@ -7,7 +7,7 @@ At the moment
 I am studying the technologies with which the project should be made (now **React**).
 The basic functionality that is found in most React projects (*adding, deleting, 
 sorting, searching, hooks and custom hooks, pagination, React router, component lifecycle, 
-working with the server (Axios) and other React features*) studying right now
+working with the server (Axios) and other React features*) studying right now.
 
 The dev environment, the bundler (**[Vite](https://vitejs.dev/guide/)**) are also set up and the application 
 structure is made. 
