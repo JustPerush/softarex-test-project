@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useGetRequest } from "./actions/useGetRequest";
 import "./styles/App.scss";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -9,7 +10,9 @@ import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 
 function App() {
+  const BASE_URL = "https://api.pexels.com/v1/";
   const API_KEY = "563492ad6f917000010000014640aabb4e9d420cbe1c0df7daf4c2bf";
+  const PER_PAGE = "per_page=3";
 
   const [posts, setPosts] = useState([
     { id: 1, title: "Javascript", body: "description" },
@@ -20,6 +23,8 @@ function App() {
   const [filter, setFilter] = useState({ sort: "", searchQuery: "" });
   const [modal, setModal] = useState(false);
 
+  const [photos, setPhotos] = useState([]);
+
   function getSortedPosts() {
     if (filter.sort) {
       return [...posts].sort((a, b) =>
@@ -28,9 +33,7 @@ function App() {
     }
     return posts;
   }
-
   const sortedPosts = useMemo(getSortedPosts, [filter.sort, posts]);
-
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter((post) => {
       if (filter.searchQuery) {
@@ -41,18 +44,23 @@ function App() {
       return true;
     });
   }, [filter.searchQuery, sortedPosts]);
-
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
     setModal(false);
   };
-
   const removePost = (post) => {
     setPosts(posts.filter((el) => el.id !== post.id));
   };
 
+  const [isLoading, errorMessage, items] = useGetRequest(
+    BASE_URL,
+    PER_PAGE,
+    API_KEY
+  );
+
   return (
     <div className="App">
+      <MyButton>{items.length}</MyButton>
       <MyButton style={{ marginTop: "30px" }} onClick={() => setModal(true)}>
         Сделать пост
       </MyButton>
