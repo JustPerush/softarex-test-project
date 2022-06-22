@@ -15,7 +15,7 @@ function App() {
   const BASE_URL = "https://api.pexels.com/v1/";
   const CURATED = "curated?";
   const API_KEY = "563492ad6f917000010000014640aabb4e9d420cbe1c0df7daf4c2bf";
-  const PER_PAGE = "per_page=3";
+  const PER_PAGE = "per_page=12";
 
   const [posts, setPosts] = useState([
     { id: 1, title: "Javascript", body: "description" },
@@ -54,6 +54,13 @@ function App() {
     setPosts(posts.filter((el) => el.id !== post.id));
   };
 
+  const [isLoading, errorMessage, items] = useGetRequest(
+    BASE_URL,
+    CURATED,
+    PER_PAGE,
+    API_KEY
+  );
+
   return (
     <div className="App">
       <MyButton style={{ marginTop: "30px" }} onClick={() => setModal(true)}>
@@ -70,7 +77,7 @@ function App() {
         title="Список постов"
       />
       <hr style={{ margin: "15px 0" }} />
-      <PhotoGallery />
+      {isLoading ? <h3>Идет загрузка...</h3> : <PhotoGallery items={items} />}
     </div>
   );
 }
