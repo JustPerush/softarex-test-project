@@ -8,9 +8,12 @@ import MyInput from "./components/UI/input/MyInput";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
+import PhotoGallery from "./components/PhotoGallery";
+import PhotosService from "./API/PhotosService";
 
 function App() {
   const BASE_URL = "https://api.pexels.com/v1/";
+  const CURATED = "curated?";
   const API_KEY = "563492ad6f917000010000014640aabb4e9d420cbe1c0df7daf4c2bf";
   const PER_PAGE = "per_page=3";
 
@@ -23,8 +26,6 @@ function App() {
   const [filter, setFilter] = useState({ sort: "", searchQuery: "" });
   const [modal, setModal] = useState(false);
 
-  const [photos, setPhotos] = useState([]);
-
   function getSortedPosts() {
     if (filter.sort) {
       return [...posts].sort((a, b) =>
@@ -33,6 +34,7 @@ function App() {
     }
     return posts;
   }
+
   const sortedPosts = useMemo(getSortedPosts, [filter.sort, posts]);
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter((post) => {
@@ -52,15 +54,8 @@ function App() {
     setPosts(posts.filter((el) => el.id !== post.id));
   };
 
-  const [isLoading, errorMessage, items] = useGetRequest(
-    BASE_URL,
-    PER_PAGE,
-    API_KEY
-  );
-
   return (
     <div className="App">
-      <MyButton>{items.length}</MyButton>
       <MyButton style={{ marginTop: "30px" }} onClick={() => setModal(true)}>
         Сделать пост
       </MyButton>
@@ -74,6 +69,8 @@ function App() {
         remove={removePost}
         title="Список постов"
       />
+      <hr style={{ margin: "15px 0" }} />
+      <PhotoGallery />
     </div>
   );
 }
