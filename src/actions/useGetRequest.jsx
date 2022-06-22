@@ -13,6 +13,7 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [isFetching, setIsFetching] = useState(true);
 
   const scrollHandler = (event) => {
     if (
@@ -21,7 +22,7 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
         100 &&
       items.length < totalCount
     ) {
-      setIsLoading(true);
+      setIsFetching(true);
     }
   };
 
@@ -34,7 +35,7 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
 
   useEffect(() => {
     setErrorMessage(null);
-    setIsLoading(true);
+    console.log(`fetching`);
     fetch(BASE_URL + CURATED + `page=${currentPage}&` + PER_PAGE, {
       method: "GET",
       headers: {
@@ -56,11 +57,12 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
       })
       .catch((error) => setErrorMessage(error.message))
       .finally(() => {
+        setIsFetching(false);
         setIsLoading(false);
       });
     return () => {
       console.log("Nothing found...");
     };
-  }, [isLoading]);
+  }, [isFetching]);
   return [isLoading, errorMessage, items];
 }
