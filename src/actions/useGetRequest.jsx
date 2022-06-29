@@ -16,10 +16,11 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
   const [isFetching, setIsFetching] = useState(true);
 
   const scrollHandler = (event) => {
+    event.preventDefault();
     if (
       event.target.documentElement.scrollHeight -
         (event.target.documentElement.scrollTop + window.innerHeight) <
-        100 &&
+        300 &&
       items.length < totalCount
     ) {
       setIsFetching(true);
@@ -34,35 +35,41 @@ export function useGetRequest(BASE_URL, CURATED = "", PER_PAGE = "", API_KEY) {
   });
 
   useEffect(() => {
+    console.log(`Fetching useEffect start working`);
     setErrorMessage(null);
-    console.log(`fetching`);
-    fetch(BASE_URL + CURATED + `page=${currentPage}&` + PER_PAGE, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: API_KEY,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        setIsLoading(true);
-        setTotalCount(response.headers["x-total-count"]);
-        return response.json();
+    if (isFetching) {
+      console.log(`fetching should started`);
+      fetch(BASE_URL + CURATED + `page=${currentPage}&` + PER_PAGE, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: API_KEY,
+        },
       })
-      .then((data) => {
-        setItems([...items, data.photos]);
-        setCurrentPage((prevState) => prevState + 1);
-      })
-      .catch((error) => setErrorMessage(error.message))
-      .finally(() => {
-        setIsFetching(false);
-        setIsLoading(false);
-      });
-    return () => {
-      console.log("Nothing found...");
-    };
+        .then((response) => {
+          console.log(`Fetching successfully done`);
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          setIsLoading(true);
+          return response.json();
+        })
+        .then((data) => {
+          setTotalCount(data.total_results);
+          setItems([...items, ...data.photos]);
+          setCurrentPage((prevState) => prevState + 1);
+          console.log(`Current Page after update`);
+          console.log(currentPage);
+        })
+        .catch((error) => setErrorMessage(error.message))
+        .finally(() => {
+          setIsFetching(false);
+          setIsLoading(false);
+        });
+      return () => {
+        console.log("Nothing found...");
+      };
+    }
   }, [isFetching]);
   return [isLoading, errorMessage, items];
 }

@@ -3,13 +3,10 @@ import { useGetRequest } from "./actions/useGetRequest";
 import "./styles/App.scss";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
-import MySelect from "./components/UI/select/MySelect";
-import MyInput from "./components/UI/input/MyInput";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import PhotoGallery from "./components/PhotoGallery";
-import PhotosService from "./API/PhotosService";
 
 function App() {
   const BASE_URL = "https://api.pexels.com/v1/";
@@ -60,7 +57,6 @@ function App() {
     PER_PAGE,
     API_KEY
   );
-
   return (
     <div className="App">
       <MyButton style={{ marginTop: "30px" }} onClick={() => setModal(true)}>

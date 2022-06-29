@@ -2,10 +2,13 @@ import React from "react";
 
 const PhotoItem = (props) => {
   return (
-    <div className="item">
-      <a href={props.photo?.url}>
-        <img src={props.photo?.src?.original} alt={props.photo?.alt} />
-      </a>
+    <div
+      className="item"
+      style={{
+        backgroundColor: `${props.photo?.avg_color}`,
+      }}
+    >
+      <img src={props.photo?.src?.large} alt={props.photo?.alt} />
       <a className="item-link" href={props.photo?.photographer_url}>
         {props.photo?.photographer}
       </a>
